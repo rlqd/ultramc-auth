@@ -1,0 +1,4 @@
+/lib/vendor/*
+/data/*
+.env
+.idea

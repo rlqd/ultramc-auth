@@ -1,0 +1,27 @@
+{
+    "name": "rlqd/ultramc-auth",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Andrey96",
+            "email": "i@andrey96.ru"
+        }
+    ],
+    "require": {
+        "symfony/form": "^5.3",
+        "guzzlehttp/guzzle": "7.0",
+        "symfony/uid": "^5.3",
+        "symfony/dotenv": "^5.3",
+        "ext-pdo": "*",
+        "symfony/console": "^5.3"
+    },
+    "autoload": {
+        "psr-4": {"Lib\\": "src/"}
+    },
+    "autoload-dev": {
+        "psr-4": {"Tests\\": "tests/"}
+    },
+    "require-dev": {
+        "phpunit/phpunit": "9.5"
+    }
+}
