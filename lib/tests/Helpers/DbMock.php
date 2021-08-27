@@ -26,6 +26,9 @@ class DbMock extends DB
 
     protected function queryInternal($query, $params, $select, $style = null, $all = null)
     {
+        if ($params !== null && !is_array($params)) {
+            $params = [$params];
+        }
         preg_match(self::REGEX_SQL_STATEMENT, $query, $matches);
         $statement = $matches[1];
         if (preg_match(self::REGEX_SQL_TABLE, $query, $matches)) {

@@ -12,6 +12,7 @@ class DbQueryMock
     public bool $expected = false;
     public ?string $expectedSql = null;
     public ?array $expectedParams = null;
+    public ?string $assertionFailure = null;
 
     public function __construct(string $statement, string $table)
     {
@@ -37,5 +38,17 @@ class DbQueryMock
         $this->expectedSql = $sql;
         $this->expectedParams = $params;
         return $this;
+    }
+
+    public function setFailure(string $message) : void
+    {
+        if ($this->assertionFailure === null) {
+            $this->assertionFailure = $message;
+        }
+    }
+
+    public function getFailure() : string
+    {
+        return $this->assertionFailure ?? 'Query was not executed';
     }
 }

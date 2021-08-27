@@ -13,7 +13,7 @@ trait TData
     protected function initProperties(array $data)
     {
         if (!empty($this->_data)) {
-            throw new \Exception('Properties were already inited for ' . static::class);
+            throw new Exception('Properties were already inited for ' . static::class);
         }
         $this->_data = $data;
     }
@@ -33,17 +33,26 @@ trait TData
         return $this->_data[$name] ?? null;
     }
 
-    /**
-     * @param string $name
-     * @param string $value
-     * @throws \Exception
-     */
     public function __set($name, $value)
     {
         $readonly = method_exists($this, 'readonly') ? $this->readonly() : [];
-        if (in_array($name, $readonly)) {
-            throw new \Exception('Trying to set readonly property ' . static::class . '::' . $name);
+        if (in_array($name, $readonly, true)) {
+            throw new Exception('Trying to set readonly property ' . static::class . '::' . $name);
         }
-        $this->_data[$name] = $value;
+        if ($value === null) {
+            unset($this->_data[$name]);
+        } else {
+            $this->_data[$name] = (string) $value;
+        }
+    }
+
+    public function __isset($name)
+    {
+        return isset($this->_data[$name]);
+    }
+
+    public function __unset($name)
+    {
+        unset($this->_data[$name]);
     }
 }

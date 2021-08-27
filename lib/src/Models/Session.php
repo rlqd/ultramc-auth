@@ -1,0 +1,38 @@
+<?php
+
+namespace Lib\Models;
+
+
+/**
+ * @property-read string $user_id
+ * @property string $updated
+ */
+class Session extends AbstractModel
+{
+    public static function table(): string
+    {
+        return 'sessions';
+    }
+
+    public function readonly(): array
+    {
+        $readonly = parent::readonly();
+        $readonly[] = 'user_id';
+        return $readonly;
+    }
+
+    public function getUserId() : \Lib\UUID
+    {
+        return new \Lib\UUID($this->user_id);
+    }
+
+    /**
+     * Refresh session updated datetime
+     * @throws \Lib\Exception
+     */
+    public function touch() : void
+    {
+        $this->updated = new \Lib\DateTime();
+        $this->save();
+    }
+}

@@ -18,7 +18,7 @@ class DB
     public function name(string $col) : string
     {
         if (!preg_match('/^\w+$/', $col)) {
-            throw new \Exception('Invalid column name: ' . $col);
+            throw new Exception('Invalid column name: ' . $col);
         }
         return $col;
     }
@@ -60,7 +60,7 @@ class DB
                 }
             }
         }
-        throw new \Exception("Failed to execute DB query: $query\nPDO code: " . $this->pdo->errorCode());
+        throw new Exception("Failed to execute DB query: $query\nPDO code: " . $this->pdo->errorCode());
     }
 
     /**
@@ -68,7 +68,7 @@ class DB
      * @param null $params
      * @param int $style
      * @return array|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function q($query, $params = null, $style = \PDO::FETCH_ASSOC)
     {
@@ -80,7 +80,7 @@ class DB
      * @param null $params
      * @param null $default
      * @return mixed|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function qVal($query, $params = null, $default = null)
     {
@@ -96,7 +96,7 @@ class DB
      * @param null $params
      * @param int $style
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function qAll($query, $params = null, $style = \PDO::FETCH_ASSOC) : array
     {
@@ -107,7 +107,7 @@ class DB
      * @param $query
      * @param null $params
      * @return int
-     * @throws \Exception
+     * @throws Exception
      */
     public function e($query, $params = null) : int
     {
