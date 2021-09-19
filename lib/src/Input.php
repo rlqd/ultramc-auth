@@ -17,6 +17,16 @@ class Input
         return array_key_exists($name, $_GET);
     }
 
+    public function getPost(string $name)
+    {
+        return $_POST[$name] ?? null;
+    }
+
+    public function hasPost(string $name)
+    {
+        return array_key_exists($name, $_POST);
+    }
+
     /**
      * @throws Exception
      * @throws \JsonException

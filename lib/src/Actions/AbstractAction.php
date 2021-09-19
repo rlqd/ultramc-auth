@@ -40,6 +40,16 @@ abstract class AbstractAction implements \Lib\IAction
         return \Lib\Input::instance()->hasParam($name);
     }
 
+    protected function getPost(string $name) : ?string
+    {
+        return \Lib\Input::instance()->getPost($name);
+    }
+
+    protected function hasPost(string $name) : bool
+    {
+        return \Lib\Input::instance()->hasPost($name);
+    }
+
     /**
      * @throws \Lib\Exception
      * @throws \JsonException
@@ -47,5 +57,15 @@ abstract class AbstractAction implements \Lib\IAction
     protected function getInput(int $depth = 2) : array
     {
         return \Lib\Input::instance()->getInput($depth);
+    }
+
+    public function __get($name)
+    {
+        return $this->getParam($name) ?? $this->getPost($name);
+    }
+
+    public function __isset($name)
+    {
+        return $this->hasParam($name) || $this->hasPost($name);
     }
 }

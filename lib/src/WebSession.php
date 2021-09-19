@@ -3,6 +3,8 @@
 namespace Lib;
 
 
+use Lib\Models\User;
+
 /**
  * @property int $user_id
  */
@@ -44,6 +46,11 @@ class WebSession
         unset($_SESSION[$name]);
     }
 
+    public function isAuthenticated() : bool
+    {
+        return !empty($this->user_id);
+    }
+
     /**
      * @return Models\User|null
      * @throws Exception
@@ -58,5 +65,10 @@ class WebSession
             $this->user = \Lib\Models\User::load($userId);
         }
         return $this->user;
+    }
+
+    public function setUser(User $user) : void
+    {
+        $this->user_id = (string) $user->getId();
     }
 }

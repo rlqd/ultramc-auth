@@ -35,8 +35,15 @@ class Controller
             $code = 500;
             $message = 'Internal server error';
         }
-        Logger::instance()->error($t);
+        if ($code == 500) {
+            Logger::instance()->error($t);
+        }
         http_send_status($code);
-        die($message);
+        if ($t instanceof IHeaderContainer) {
+            foreach ($t->getHeaders() as $name => $value) {
+                header("$name: $value");
+            }
+        }
+        die(htmlspecialchars($message, ENT_NOQUOTES));
     }
 }

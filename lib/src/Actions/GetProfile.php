@@ -2,7 +2,10 @@
 
 namespace Lib\Actions;
 
-
+/**
+ * GET:
+ * @property-read string $uuid
+ */
 class GetProfile extends AbstractAction
 {
     public const MOJANG_TEXTURES_URL = 'http://textures.minecraft.net/texture/';
@@ -18,11 +21,10 @@ class GetProfile extends AbstractAction
     public function run(): ?array
     {
         if ($this->user === null) {
-            $uuid = $this->getParam('uuid');
-            if (empty($uuid)) {
+            if (empty($this->uuid)) {
                 throw new \Lib\Exception('Missing required parameter uuid', 400);
             }
-            $userId = new \Lib\UUID($uuid);
+            $userId = new \Lib\UUID($this->uuid);
             $this->user = \Lib\Models\User::load($userId);
         }
 

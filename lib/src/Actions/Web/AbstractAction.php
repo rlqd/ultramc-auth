@@ -34,7 +34,7 @@ abstract class AbstractAction extends \Lib\Actions\AbstractAction
     {
         $this->currentUser = $this->session->getUser();
         if ($this->currentUser === null) {
-            throw new \Lib\Exception('Session not authenticated');
+            throw new \Lib\Exception('Session not authenticated', 401);
         }
         $this->checkAccess($this->currentUser);
     }

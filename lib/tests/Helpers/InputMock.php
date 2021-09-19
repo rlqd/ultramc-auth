@@ -6,6 +6,7 @@ namespace Tests\Helpers;
 class InputMock extends \Lib\Input
 {
     private array $params = [];
+    private array $post;
     private ?array $input = null;
 
     public function getParam(string $name): ?string
@@ -16,6 +17,16 @@ class InputMock extends \Lib\Input
     public function hasParam(string $name) : bool
     {
         return array_key_exists($name, $this->params);
+    }
+
+    public function getPost(string $name)
+    {
+        return $this->post[$name] ?? null;
+    }
+
+    public function hasPost(string $name) : bool
+    {
+        return array_key_exists($name, $this->post);
     }
 
     public function getInput(int $depth = 512): array
@@ -29,6 +40,11 @@ class InputMock extends \Lib\Input
     public function setParams(array $params) : void
     {
         $this->params = $params;
+    }
+
+    public function setPost(array $post) : void
+    {
+        $this->post = $post;
     }
 
     public function setInput(array $input) : void
