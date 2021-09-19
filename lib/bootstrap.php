@@ -2,6 +2,7 @@
 
 define('ROOT_DIR', dirname(__DIR__));
 define('DATA_DIR', ROOT_DIR . '/data');
+define('ASSETS_DIR', ROOT_DIR . '/www/assets');
 
 require_once __DIR__ . '/vendor/autoload.php';
 

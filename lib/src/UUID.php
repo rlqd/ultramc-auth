@@ -11,7 +11,7 @@ class UUID
     public function __construct(string $uuid = null)
     {
         if ($uuid === null) {
-            $this->uuid = \Symfony\Component\Uid\Uuid::v6();
+            $this->uuid = UUIDFactory::instance()->makeUUID();
             return;
         }
         $uuid = self::ensureFormat($uuid);

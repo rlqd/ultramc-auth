@@ -20,7 +20,7 @@ class GetProfile extends AbstractAction
         if ($this->user === null) {
             $uuid = $this->getParam('uuid');
             if (empty($uuid)) {
-                throw new \Lib\Exception('Missing required parameter uuid');
+                throw new \Lib\Exception('Missing required parameter uuid', 400);
             }
             $userId = new \Lib\UUID($uuid);
             $this->user = \Lib\Models\User::load($userId);

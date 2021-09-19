@@ -3,6 +3,8 @@
 namespace Lib\Models;
 
 use Lib\DateTime;
+use Lib\Exception;
+use Lib\Password;
 use Lib\UUID;
 
 /**
@@ -10,6 +12,7 @@ use Lib\UUID;
  * @property string $password_hash
  * @property string $mojang_uuid
  * @property string $skin_id
+ * @property string $avatar_id
  * @property string $privilege_mask
  * @property string $created
  * @property string $last_login
@@ -17,8 +20,6 @@ use Lib\UUID;
  */
 class User extends AbstractModel
 {
-    public const SESSION_LIFETIME = 'P30D';
-
     public const BIT_APPROVED = 0b1;
     public const BIT_ADMIN = 0b10;
 
@@ -31,6 +32,14 @@ class User extends AbstractModel
     {
         if ($this->mojang_uuid) {
             return new UUID($this->mojang_uuid);
+        }
+        return null;
+    }
+
+    public function getAvatarId() : ?UUID
+    {
+        if ($this->avatar_id) {
+            return new UUID($this->avatar_id);
         }
         return null;
     }
@@ -60,17 +69,11 @@ class User extends AbstractModel
 
     public function getSession(UUID $id) : Session
     {
-        $lifetime = new \DateInterval(self::SESSION_LIFETIME);
-        $since = new DateTime();
-        $since->sub($lifetime);
-        $sessions = Session::find([
-            'id' => $id,
-            'since' => ['>=', $since],
-        ], 1);
-        if (empty($sessions)) {
-            throw new \Exception("Session $id not found or expired");
+        $session = Session::load($id);
+        if ($session->user_id !== $this->id) {
+            throw new Exception('Attempting to load other user session');
         }
-        return reset($sessions);
+        return $session;
     }
 
     /**
@@ -83,5 +86,10 @@ class User extends AbstractModel
         }
         $skinId = new UUID($this->skin_id);
         return Skin::load($skinId);
+    }
+
+    public function getPassword() : Password
+    {
+        return Password::fromHash($this->password_hash);
     }
 }

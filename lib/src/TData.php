@@ -15,7 +15,12 @@ trait TData
         if (!empty($this->_data)) {
             throw new Exception('Properties were already inited for ' . static::class);
         }
-        $this->_data = $data;
+        $this->_data = array_map('strval', $data);
+    }
+
+    public function getAllProperties() : array
+    {
+        return $this->_data;
     }
 
     public function getMutableProperties() : array

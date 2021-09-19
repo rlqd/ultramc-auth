@@ -44,7 +44,7 @@ abstract class AbstractAction implements \Lib\IAction
      * @throws \Lib\Exception
      * @throws \JsonException
      */
-    protected function getInput(int $depth = 512) : array
+    protected function getInput(int $depth = 2) : array
     {
         return \Lib\Input::instance()->getInput($depth);
     }

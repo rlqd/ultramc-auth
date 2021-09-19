@@ -151,7 +151,7 @@ class UserTest extends DbTestCase
         $user = User::create($userData);
         $this->mockQueries(
             $this->query(self::OP_INSERT, 'users')
-                ->expect('INSERT INTO `users` (`id`, `name`, `password_hash`) VALUES (:id, :name, :password_hash)', ['id' => $user->id] + $userData),
+                ->expect('INSERT INTO `users` (`name`, `password_hash`, `id`) VALUES (:name, :password_hash, :id)', ['id' => $user->id] + $userData),
         );
         self::assertTrue($user->isNew());
         $user->save();

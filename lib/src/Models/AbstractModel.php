@@ -164,7 +164,11 @@ abstract class AbstractModel
      */
     public function save() : void
     {
-        $data = $this->getMutableProperties();
+        if ($this->_new) {
+            $data = $this->getAllProperties();
+        } else {
+            $data = $this->getMutableProperties();
+        }
         $table = $this->db->name(static::table());
         if (empty($data)) {
             throw new Exception('No data to save for ' . $table . ':' . $this->id . ($this->_new ? ' (new)' : ''));
@@ -181,8 +185,8 @@ abstract class AbstractModel
 
         if ($this->_new) {
             $this->db->e(
-                'INSERT INTO `' . $table . '` (`id`, ' . implode(', ', $columns) . ') VALUES (:id, ' . implode(', ', $params) . ')',
-                $data + ['id' => $this->id]
+                'INSERT INTO `' . $table . '` (' . implode(', ', $columns) . ') VALUES (' . implode(', ', $params) . ')',
+                $data
             );
             $this->_new = false;
         } else {

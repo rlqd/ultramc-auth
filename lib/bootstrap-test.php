@@ -1,7 +1,9 @@
 <?php
 
 define('ROOT_DIR', dirname(__DIR__));
-define('DATA_DIR', __DIR__ . '/tests/data');
+define('TESTS_DIR', __DIR__ . '/tests');
+define('DATA_DIR', TESTS_DIR . '/data');
+define('ASSETS_DIR', TESTS_DIR . '/assets');
 
 require_once __DIR__ . '/vendor/autoload.php';
 

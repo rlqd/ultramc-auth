@@ -16,7 +16,7 @@ class GetUsersByName extends AbstractAction
             $names = [$username];
         } else {
             //Get multiple names (json array)
-            $names = $this->getInput(2);
+            $names = $this->getInput();
             if (empty($names)) {
                 throw new \Lib\Exception('Wrong multiple names input', 400);
             }

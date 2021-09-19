@@ -65,7 +65,7 @@ abstract class DbTestCase extends TestCase
         }
         $expectedQueries = $this->expectedQueries;
         $runQueries = $this->dbMock->getQueries();
-        foreach ($runQueries as [$definition, $sql, $params]) {
+        foreach ($runQueries as [$definition, $sql, $params, $stackTrace]) {
             $expected = reset($expectedQueries);
             if ($expected === false) {
                 break;
@@ -75,17 +75,17 @@ abstract class DbTestCase extends TestCase
                 continue;
             }
             if ($expected->expectedSql !== null && mb_strpos($sql, $expected->expectedSql) === false) {
-                $expected->setFailure("Got wrong SQL: $sql");
+                $expected->setFailure("Got wrong SQL: $sql at\n$stackTrace");
                 continue;
             }
             if ($expected->expectedParams !== null) {
                 foreach ($expected->expectedParams as $key => $value) {
                     if (!isset($params[$key])) {
-                        $expected->setFailure("Missing param '$key' (all params: " . implode(', ', array_keys($params)) . ")");
+                        $expected->setFailure("Missing param '$key' (all params: " . implode(', ', array_keys($params)) . ") at\n$stackTrace");
                         continue 2;
                     }
                     if (((string)$params[$key]) !== ((string)$value)) {
-                        $expected->setFailure("Wrong param value $key: " . $params[$key] . " (expected: $value)");
+                        $expected->setFailure("Wrong param value $key: " . $params[$key] . " (expected: $value) at\n$stackTrace");
                         continue 2;
                     }
                 }

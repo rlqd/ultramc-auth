@@ -3,15 +3,38 @@
 namespace Lib\Models;
 
 
+use Lib\DateTime;
+use Lib\UUID;
+
 /**
  * @property-read string $user_id
  * @property string $updated
  */
 class Session extends AbstractModel
 {
+    public const SESSION_LIFETIME = 'P30D';
+
     public static function table(): string
     {
         return 'sessions';
+    }
+
+    public static function load(UUID $id, bool $filterExpired = true): self
+    {
+        if (!$filterExpired) {
+            return parent::load($id);
+        }
+        $lifetime = new \DateInterval(self::SESSION_LIFETIME);
+        $since = new DateTime();
+        $since->sub($lifetime);
+        $sessions = static::find([
+            'id' => $id,
+            'since' => ['>=', $since],
+        ], 1);
+        if (empty($sessions)) {
+            throw new \Exception("Session $id not found or expired", 403);
+        }
+        return reset($sessions);
     }
 
     public function readonly(): array
@@ -19,6 +42,14 @@ class Session extends AbstractModel
         $readonly = parent::readonly();
         $readonly[] = 'user_id';
         return $readonly;
+    }
+
+    /**
+     * @throws \Lib\Exception
+     */
+    public function getUser() : User
+    {
+        return User::load($this->getUserId());
     }
 
     public function getUserId() : \Lib\UUID

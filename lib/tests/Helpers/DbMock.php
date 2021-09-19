@@ -5,6 +5,7 @@ namespace Tests\Helpers;
 
 
 use Lib\DB;
+use Lib\Exception;
 use PHPUnit\Framework\AssertionFailedError;
 
 class DbMock extends DB
@@ -39,7 +40,7 @@ class DbMock extends DB
             }
             $definition = $statement;
         }
-        $this->queries[] = [$definition, $query, $params];
+        $this->queries[] = [$definition, $query, $params, (new Exception())->getTraceAsString()];
         if (empty($this->mocks[$definition])) {
             if ($select) {
                 $this->killTest('Query result mock not found for ' . $definition);

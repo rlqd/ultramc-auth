@@ -7,7 +7,7 @@ class ClientJoin extends AbstractAction
 {
     public function run(): ?array
     {
-        $data = $this->getInput(2);
+        $data = $this->getInput();
         if (!isset($data['selectedProfile'], $data['accessToken'], $data['serverId'])) {
             throw new \Lib\Exception('Missing required data', 400);
         }
