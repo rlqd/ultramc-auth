@@ -29,7 +29,7 @@ class Session extends AbstractModel
         $since->sub($lifetime);
         $sessions = static::find([
             'id' => $id,
-            'since' => ['>=', $since],
+            'updated' => ['>=', $since],
         ], 1);
         if (empty($sessions)) {
             throw new \Exception("Session $id not found or expired", 403);
