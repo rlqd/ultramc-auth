@@ -12,7 +12,9 @@ class DB
 
     protected function __construct()
     {
-        $this->pdo = new \PDO($_ENV['DB_DSL'], $_ENV['DB_USER'], $_ENV['DB_PASS']);
+        $this->pdo = new \PDO($_ENV['DB_DSL'], $_ENV['DB_USER'], $_ENV['DB_PASS'], [
+            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+        ]);
     }
 
     public function name(string $col) : string
@@ -60,7 +62,8 @@ class DB
                 }
             }
         }
-        throw new Exception("Failed to execute DB query: $query\nPDO code: " . $this->pdo->errorCode());
+        throw new Exception("Failed to execute DB query: $query\nPDO code: " . $this->pdo->errorCode()
+            . "\nPDO error: " . print_r($this->pdo->errorInfo(), true));
     }
 
     /**
