@@ -188,8 +188,11 @@ abstract class AbstractModel
             );
             $this->_new = false;
         } else {
+            $updateStr = implode(', ', array_map(function($col, $param) {
+                return "$col = $param";
+            }, $columns, $params));
             $this->db->e(
-                'UPDATE `' . $table . '` SET (' . implode(', ', $columns) . ') VALUES (' . implode(', ', $params) . ') WHERE `id` = :id',
+                'UPDATE `' . $table . '` SET ' . $updateStr . ' WHERE `id` = :id',
                 $data + ['id' => $this->id]
             );
         }

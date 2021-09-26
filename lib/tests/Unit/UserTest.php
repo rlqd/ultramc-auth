@@ -171,7 +171,7 @@ class UserTest extends DbTestCase
                 ]),
             $this->query(self::OP_UPDATE, 'users')
                 ->expect(
-                    'UPDATE `users` SET (`name`, `password_hash`) VALUES (:name, :password_hash) WHERE `id` = :id',
+                    'UPDATE `users` SET `name` = :name, `password_hash` = :password_hash WHERE `id` = :id',
                     ['id' => (string)$id, 'name' => 'rlqd', 'password_hash' => 'change_me']
                 ),
         );
