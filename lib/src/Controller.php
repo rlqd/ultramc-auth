@@ -38,7 +38,7 @@ class Controller
         if ($code == 500) {
             Logger::instance()->error($t);
         }
-        http_send_status($code);
+        http_response_code($code);
         if ($t instanceof IHeaderContainer) {
             foreach ($t->getHeaders() as $name => $value) {
                 header("$name: $value");
