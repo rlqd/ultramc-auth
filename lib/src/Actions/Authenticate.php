@@ -15,10 +15,10 @@ class Authenticate extends AbstractAction
     {
         $input = $this->getInput();
         if ($this->hasParam('refresh')) {
-            if (!isset($input['token'])) {
+            if (!isset($input['accessToken'])) {
                 throw new Exception('Missing access token', 400);
             }
-            $sessionUuid = new UUID($input['token']);
+            $sessionUuid = new UUID($input['accessToken']);
             $session = Session::load($sessionUuid);
             $user = $session->getUser();
         } else {

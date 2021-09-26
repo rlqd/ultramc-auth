@@ -100,7 +100,7 @@ class AuthenticateTest extends ActionTestCase
         $name = 'rlqd';
         $this->mockInputParams(['refresh' => null]);
         $this->mockInputData([
-            'token' => (string) $sessionId,
+            'accessToken' => (string) $sessionId,
         ]);
         $this->mockQueries(
             $this->query(self::OP_SELECT, 'sessions')
