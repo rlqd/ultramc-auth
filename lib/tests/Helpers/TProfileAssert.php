@@ -25,7 +25,7 @@ trait TProfileAssert
             'properties' => [
                 [
                     'name' => 'textures',
-                    'value' => \Lib\Controller::instance()->encode([
+                    'value' => base64_encode(\Lib\Controller::instance()->encode([
                         'timestamp' => strtotime($skinUpdated),
                         'profileId' => $userId->format(),
                         'profileName' => $name,
@@ -34,7 +34,7 @@ trait TProfileAssert
                                 'url' => \Lib\Actions\GetProfile::MOJANG_TEXTURES_URL . $skinId
                             ],
                         ] : [],
-                    ]),
+                    ])),
                     'signature' => $signature,
                 ],
             ],

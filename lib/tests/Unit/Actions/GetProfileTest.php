@@ -37,7 +37,7 @@ class GetProfileTest extends \Tests\Helpers\ActionTestCase
             'rlqd',
             $skinId,
             $updated,
-            'cg3oKh4Ai3TZWeBA5B9yC4sCbfcpajYk0KToFlFYATC+xtjQ8W+EtlEHyqel1UgeaMKH7zQHs4B62QWGCYv7exBvDnEMgaPku78N+rdLqzUwO2Fe5jbqcHcJHgBCzE0gjTaxswjbNvw4ir5wxWPEFBYj07D0rH7SB6hj3bxNYTA='
+            'vTrAy3dXa7Co0UkAEYW8u5OP9uQ1vSJbEFSLconsCPLhgabmAjvZD07NsiPedoMrgPlFW73EA7gCtgm0GL1U1ZFxxNzrkVRZtkQF0ZcOZ+jX23/Xxgz9lBkuMIpHwBznVfBd1r2wgrI0D065yDDr/hy7KHeXjfZCqVEGqSubkgU='
         );
     }
 
@@ -59,7 +59,7 @@ class GetProfileTest extends \Tests\Helpers\ActionTestCase
             'rlqd',
             null,
             \Lib\Actions\GetProfile::DEFAULT_TS,
-            'iXw1w8IwXf4fHazsUkZev0APGmQzb07JaUDrTYgjkKqr47v+hVC2EB8RFrZuWYCgwFRM0lQBiZEjs5aAg5iW7cr7Tt0D3VeOcs1T4iV/8EYE1Ki/9XwZ9nNVIjeTRpVk5TLJBEV4yJ6IehdG0nBpJ71eGICzbSYJ6vvtuOcerGE='
+            'RJpPx5YVjUlLYK0q/bEzzyBWpve2U+nCqWgxxLMg7kVoKFnNTyZ7bDvxbS2yw8S27lcuyQcdzsLZufcvFg/SxnzH4Gq+8N+VWhUtvyhuJIoW5Y0GdLsv4PJnv9ckwfKUPiESxwzXVnp+DPRNppy8Ns4A0GLOIY0U51mpkpWHjfI='
         );
     }
 
@@ -83,7 +83,7 @@ class GetProfileTest extends \Tests\Helpers\ActionTestCase
             'rlqd',
             null,
             \Lib\Actions\GetProfile::DEFAULT_TS,
-            'ewuV1jnlwHKscuYE+MazlSZTdT+rQApb43Iki+tRKOa+mmuTrciXOtZEKFim+BojkjdVd5sop2YAEsGOPhaVk1istLZyr+X6R0MTqsGaxI8nQ1zn7a5MU/vItu822cNebmYjTqGpD+KJTSwgstmBITkE6GdbbH8URDV3TSxmPqo='
+            'sa5nwuASg9V5nZh0Nb/Q3qKv2w4ec6Za1RD0tUQGqZoehCKftF4/oSnZkpQbNkiH3oR/ur3E5uuHOp/3DRJkn6W8KyQscC9cBCm63+jlwJeDdBRPfRnxQRupLigIXAtDv+FKl05bwPjJgE4+jCzFndKToMKXVVCcFu8z6PLLzBk='
         );
     }
 }

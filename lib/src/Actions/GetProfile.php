@@ -42,7 +42,7 @@ class GetProfile extends AbstractAction
      */
     protected function signProperty(string $name, array $value) : array
     {
-        $encoded = \Lib\Controller::instance()->encode($value);
+        $encoded = base64_encode(\Lib\Controller::instance()->encode($value));
 
         $keyFile = DATA_DIR . '/yggdrasil_session_private.pem';
         if (!is_file($keyFile)) {

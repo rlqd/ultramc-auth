@@ -96,8 +96,8 @@ class UserTest extends DbTestCase
                     'auth_server_id' => 'qwerty',
                 ],
                 'limit' => 1,
-                'expectedQuery' => 'SELECT * FROM `users` WHERE `auth_server_id` = :param0 LIMIT :param1',
-                'expectedParams' => ['param0' => 'qwerty', 'param1' => 1],
+                'expectedQuery' => 'SELECT * FROM `users` WHERE `auth_server_id` = :param0 LIMIT 1',
+                'expectedParams' => ['param0' => 'qwerty'],
             ],
             [
                 'constraints' => [

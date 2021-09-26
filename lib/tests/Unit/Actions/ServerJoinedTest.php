@@ -38,7 +38,7 @@ class ServerJoinedTest extends \Tests\Helpers\ActionTestCase
             'rlqd',
             null,
             \Lib\Actions\GetProfile::DEFAULT_TS,
-            'iXw1w8IwXf4fHazsUkZev0APGmQzb07JaUDrTYgjkKqr47v+hVC2EB8RFrZuWYCgwFRM0lQBiZEjs5aAg5iW7cr7Tt0D3VeOcs1T4iV/8EYE1Ki/9XwZ9nNVIjeTRpVk5TLJBEV4yJ6IehdG0nBpJ71eGICzbSYJ6vvtuOcerGE='
+            'RJpPx5YVjUlLYK0q/bEzzyBWpve2U+nCqWgxxLMg7kVoKFnNTyZ7bDvxbS2yw8S27lcuyQcdzsLZufcvFg/SxnzH4Gq+8N+VWhUtvyhuJIoW5Y0GdLsv4PJnv9ckwfKUPiESxwzXVnp+DPRNppy8Ns4A0GLOIY0U51mpkpWHjfI='
         );
     }
 
