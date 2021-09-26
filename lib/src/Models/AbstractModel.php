@@ -127,9 +127,7 @@ abstract class AbstractModel
             }
         }
         if ($limit > 0) {
-            $key = 'param' . ($i++);
-            $query .= " LIMIT :$key";
-            $params[$key] = $limit;
+            $query .= " LIMIT $limit";
         }
         $rows = $db->qAll($query, $params);
         $models = [];
