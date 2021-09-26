@@ -27,40 +27,44 @@ class DB
 
     protected function queryInternal($query, $params, $select, $style = null, $all = null)
     {
-        if ($params !== null) {
-            if (!is_array($params)) {
-                $params = [$params];
-            }
-            $st = $this->pdo->prepare($query);
-            if ($st && $st->execute($params)) {
-                if ($select) {
-                    $data = $all ? $st->fetchAll($style) : $st->fetch($style);
-                    $st->closeCursor();
-                    if ($data === false) {
-                        $data = null;
-                    }
-                    return $data;
-                } else {
-                    return $st->rowCount();
+        try {
+            if ($params !== null) {
+                if (!is_array($params)) {
+                    $params = [$params];
                 }
-            }
-        } else {
-            if ($select) {
-                $st = $this->pdo->query($query);
-                if ($st) {
-                    $data = $all ? $st->fetchAll($style) : $st->fetch($style);
-                    $st->closeCursor();
-                    if ($data === false) {
-                        $data = null;
+                $st = $this->pdo->prepare($query);
+                if ($st && $st->execute($params)) {
+                    if ($select) {
+                        $data = $all ? $st->fetchAll($style) : $st->fetch($style);
+                        $st->closeCursor();
+                        if ($data === false) {
+                            $data = null;
+                        }
+                        return $data;
+                    } else {
+                        return $st->rowCount();
                     }
-                    return $data;
                 }
             } else {
-                $result = $this->pdo->exec($query);
-                if ($result !== false) {
-                    return $result;
+                if ($select) {
+                    $st = $this->pdo->query($query);
+                    if ($st) {
+                        $data = $all ? $st->fetchAll($style) : $st->fetch($style);
+                        $st->closeCursor();
+                        if ($data === false) {
+                            $data = null;
+                        }
+                        return $data;
+                    }
+                } else {
+                    $result = $this->pdo->exec($query);
+                    if ($result !== false) {
+                        return $result;
+                    }
                 }
             }
+        } catch (\PDOException $e) {
+            throw new Exception("Failed to execute DB query: $query", 500, $e);
         }
         throw new Exception("Failed to execute DB query: $query\nPDO code: " . $this->pdo->errorCode()
             . "\nPDO error: " . print_r($this->pdo->errorInfo(), true));
