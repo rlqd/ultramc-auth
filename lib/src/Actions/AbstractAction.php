@@ -3,6 +3,8 @@
 namespace Lib\Actions;
 
 
+use Lib\Exception;
+
 abstract class AbstractAction implements \Lib\IAction
 {
     /**
@@ -26,7 +28,10 @@ abstract class AbstractAction implements \Lib\IAction
     protected function checkAccess(\Lib\Models\User $user) : void
     {
         if (!$user->isApproved()) {
-            throw new \Lib\Exception("User {$user->id} is not approved", 403);
+            throw new Exception("User is not approved", 403);
+        }
+        if ($user->password_reset) {
+            throw new Exception("User has temporary password, game auth not permitted", 403);
         }
     }
 

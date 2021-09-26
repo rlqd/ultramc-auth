@@ -2,7 +2,6 @@
 
 namespace Lib\Models;
 
-use Lib\DateTime;
 use Lib\Exception;
 use Lib\Password;
 use Lib\UUID;
@@ -10,12 +9,12 @@ use Lib\UUID;
 /**
  * @property string $name
  * @property string $password_hash
+ * @property string $password_reset
  * @property string $mojang_uuid
  * @property string $skin_id
  * @property string $avatar_id
  * @property string $privilege_mask
  * @property string $created
- * @property string $last_login
  * @property string $auth_server_id
  */
 class User extends AbstractModel
@@ -28,12 +27,17 @@ class User extends AbstractModel
         return 'users';
     }
 
-    public function getMojangUuid() : ?UUID
+    public function isLinkedToMojang() : bool
+    {
+        return !empty($this->mojang_uuid);
+    }
+
+    public function getGameUuid() : UUID
     {
         if ($this->mojang_uuid) {
             return new UUID($this->mojang_uuid);
         }
-        return null;
+        return $this->getId();
     }
 
     public function getAvatarId() : ?UUID

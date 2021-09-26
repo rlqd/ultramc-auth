@@ -5,6 +5,7 @@ namespace Lib\Actions;
 
 use Lib\Exception;
 use Lib\Models\User;
+use Lib\Password;
 use Lib\UUID;
 use Lib\Models\Session;
 
@@ -27,6 +28,7 @@ class Authenticate extends AbstractAction
             $session = null;
             $user = $this->getUserByNameAndPass($input['username'], $input['password']);
         }
+        $this->checkAccess($user);
 
         if ($session) {
             $session->touch();
@@ -39,7 +41,7 @@ class Authenticate extends AbstractAction
         }
 
         return [
-            'uuid' => $user->getId()->format(),
+            'uuid' => $user->getGameUuid()->format(),
             'name' => $user->name,
             'avatarImage' => $this->getAvatarPayload($user),
             'accessToken' => (string) $session->getId(),
@@ -53,8 +55,13 @@ class Authenticate extends AbstractAction
             throw new Exception('Username does not exists', 404);
         }
         $user = reset($user);
-        if (!$user->getPassword()->verify($password)) {
+        $userPassword = $user->getPassword();
+        if (!$userPassword->verify($password)) {
             throw new Exception('Invalid password', 403);
+        }
+        if ($userPassword->isShouldMigrate()) {
+            $user->password_hash = Password::fromPlaintext($password)->getHash();
+            $user->save();
         }
         return $user;
     }

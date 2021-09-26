@@ -62,4 +62,28 @@ class GetProfileTest extends \Tests\Helpers\ActionTestCase
             'iXw1w8IwXf4fHazsUkZev0APGmQzb07JaUDrTYgjkKqr47v+hVC2EB8RFrZuWYCgwFRM0lQBiZEjs5aAg5iW7cr7Tt0D3VeOcs1T4iV/8EYE1Ki/9XwZ9nNVIjeTRpVk5TLJBEV4yJ6IehdG0nBpJ71eGICzbSYJ6vvtuOcerGE='
         );
     }
+
+    public function testMojangLinked() : void
+    {
+        $userId = new UUID('4e8b178de057410ca5ee9777339508c3');
+        $mojangId = new UUID('1ec1e61d4e9b6f828987f7392520cbc7');
+        $this->mockInputParams(['uuid' => $userId->format()]);
+        $this->mockQueries(
+            $this->query(self::OP_SELECT, 'users')
+                ->result([
+                    'id' => (string) $userId,
+                    'name' => 'rlqd',
+                    'mojang_uuid' => (string) $mojangId,
+                ]),
+        );
+        $action = new \Lib\Actions\GetProfile();
+        self::assertProfileAction(
+            $action,
+            $mojangId,
+            'rlqd',
+            null,
+            \Lib\Actions\GetProfile::DEFAULT_TS,
+            'ewuV1jnlwHKscuYE+MazlSZTdT+rQApb43Iki+tRKOa+mmuTrciXOtZEKFim+BojkjdVd5sop2YAEsGOPhaVk1istLZyr+X6R0MTqsGaxI8nQ1zn7a5MU/vItu822cNebmYjTqGpD+KJTSwgstmBITkE6GdbbH8URDV3TSxmPqo='
+        );
+    }
 }

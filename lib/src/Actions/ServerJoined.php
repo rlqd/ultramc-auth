@@ -2,6 +2,9 @@
 
 namespace Lib\Actions;
 
+use Lib\Exception;
+use Lib\MojangAuth;
+
 /**
  * GET:
  * @property-read string $username
@@ -12,18 +15,26 @@ class ServerJoined extends AbstractAction
     public function run(): ?array
     {
         if (!isset($this->username, $this->serverId)) {
-            throw new \Lib\Exception('Missing required parameters', 400);
+            throw new Exception('Missing required parameters', 400);
         }
 
         $users = \Lib\Models\User::find([
             'name' => $this->username,
-            'auth_server_id' => $this->serverId,
         ], 1);
         if (empty($users)) {
-            throw new \Lib\Exception('User not found or wrong serverId', 403);
+            throw new Exception('User not found', 404);
         }
 
-        $action = new GetProfile(reset($users));
+        $user = reset($users);
+        $this->checkAccess($user);
+        if ($user->auth_server_id !== $this->serverId) {
+            if (!$user->isLinkedToMojang()) {
+                throw new Exception('Authentication is incorrect or expired', 403);
+            }
+            return MojangAuth::instance()->serverJoined($this->username, $this->serverId);
+        }
+
+        $action = new GetProfile($user);
         return $action->call();
     }
 }

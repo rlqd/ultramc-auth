@@ -2,6 +2,11 @@
 
 $app = new Symfony\Component\Console\Application();
 
-$app->add(new \Lib\Commands\GenAssetsCertCommand());
+$app->addCommands([
+    new \Lib\Commands\GenAssetsCertCommand(),
+    new \Lib\Commands\RegisterUserCommand(),
+    new \Lib\Commands\GrantPrivilegesCommand(),
+    new \Lib\Commands\ResetUserPassword(),
+]);
 
 $app->run();

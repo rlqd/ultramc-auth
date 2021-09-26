@@ -9,6 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class GenAssetsCertCommand extends Command
 {
     protected static $defaultName = 'gen-assets-cert';
+    protected static $defaultDescription = 'Generate keypair for assets signing';
 
     protected function configure()
     {

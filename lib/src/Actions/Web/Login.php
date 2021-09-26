@@ -4,6 +4,7 @@ namespace Lib\Actions\Web;
 
 use Lib\Exception;
 use Lib\Models\User;
+use Lib\Password;
 use Lib\WebRedirect;
 
 /**
@@ -30,9 +31,15 @@ class Login extends AbstractAction
                 throw new Exception('User not found', 404);
             }
             $user = reset($users);
-            if (!$user->getPassword()->verify($this->password)) {
+            $password = $user->getPassword();
+            if (!$password->verify($this->password)) {
                 throw new Exception('Passwords do not match', 403);
             }
+            if ($password->isShouldMigrate()) {
+                $user->password_hash = Password::fromPlaintext($this->password)->getHash();
+                $user->save();
+            }
+
             $this->session->setUser($user);
         }
         throw new WebRedirect($this->return_url ?? '/');

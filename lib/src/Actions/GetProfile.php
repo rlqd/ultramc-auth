@@ -29,7 +29,7 @@ class GetProfile extends AbstractAction
         }
 
         return [
-            'id' => $this->user->getId()->format(),
+            'id' => $this->user->getGameUuid()->format(),
             'name' => $this->user->name,
             'properties' => [
                 $this->signProperty('textures', $this->renderTextures())
@@ -71,7 +71,7 @@ class GetProfile extends AbstractAction
         $skin = $this->user->getSkin();
         return [
             'timestamp' => $skin ? strtotime($skin->updated) : strtotime(self::DEFAULT_TS),
-            'profileId' => $this->user->getId()->format(),
+            'profileId' => $this->user->getGameUuid()->format(),
             'profileName' => $this->user->name,
             'textures' => $skin === null ? [] : [
                 'SKIN' => [
