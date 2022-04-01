@@ -70,5 +70,6 @@ class WebSession
     public function setUser(User $user) : void
     {
         $this->user_id = (string) $user->getId();
+        $this->user = $user;
     }
 }

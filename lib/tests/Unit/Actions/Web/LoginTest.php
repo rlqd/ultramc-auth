@@ -3,9 +3,9 @@
 namespace Tests\Unit\Actions\Web;
 
 use Lib\Actions\Web\Login;
+use Lib\Models\User;
 use Lib\Password;
 use Lib\UUID;
-use Lib\WebRedirect;
 use Tests\Helpers\ActionTestCase;
 
 class LoginTest extends ActionTestCase
@@ -13,13 +13,12 @@ class LoginTest extends ActionTestCase
     public function testSuccess() : void
     {
         $userId = new UUID();
+        $skinId = new UUID();
         $name = 'rlqd';
         $password = 'hackme';
-        $return = '/kitty-images';
         $this->mockInputPost([
             'username' => $name,
             'password' => $password,
-            'return_url' => $return,
         ]);
         $this->mockQueries(
             $this->query(self::OP_SELECT, 'users')
@@ -30,16 +29,32 @@ class LoginTest extends ActionTestCase
                             'id' => (string) $userId,
                             'name' => $name,
                             'password_hash' => Password::fromPlaintext($password)->getHash(),
+                            'skin_id' => (string) $skinId,
+                            'privilege_mask' => (string) (User::BIT_APPROVED),
                         ],
                     ]
-                )
+                ),
+            $this->query(self::OP_SELECT, 'skins')
+                ->expect(null, [$skinId])
+                ->result([
+                    'id' => (string) $skinId,
+                    'user_id' => (string) $userId,
+                ]),
         );
         $action = new Login();
-        try {
-            $this->callAction($action);
-        } catch (WebRedirect $redirect) {
-            self::assertEquals(['Location' => $return], $redirect->getHeaders());
-        }
+        self::assertActionOutput($action, [
+            'success' => true,
+            'user' => [
+                'id' => $userId->format(),
+                'name' => $name,
+                'mojangUUID' => null,
+                'skinUrl' => '/assets/skins/' . $skinId->format() . '.png',
+                'privileges' => [
+                    'admin' => false,
+                    'approved' => true,
+                ],
+            ],
+        ]);
         self::assertEquals((string)$userId, $this->getSession()->user_id);
     }
 
@@ -48,11 +63,9 @@ class LoginTest extends ActionTestCase
         $userId = new UUID();
         $name = 'rlqd';
         $password = 'hackme';
-        $return = '/kitty-images';
         $this->mockInputPost([
             'username' => $name,
             'password' => 'wrong',
-            'return_url' => $return,
         ]);
         $this->mockQueries(
             $this->query(self::OP_SELECT, 'users')
@@ -67,9 +80,11 @@ class LoginTest extends ActionTestCase
                     ]
                 )
         );
-        $this->expectExceptionCode(403);
-        $this->expectExceptionMessage('Passwords do not match');
         $action = new Login();
-        $this->callAction($action);
+        self::assertActionOutput($action, [
+            'success' => false,
+            'error' => 'Passwords do not match',
+        ]);
+        self::assertNotEquals((string)$userId, $this->getSession()->user_id);
     }
 }

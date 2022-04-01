@@ -28,16 +28,7 @@ class Controller
 
     public function handleError(\Throwable $t) : void
     {
-        if ($t instanceof Exception && !$t->isInternal()) {
-            $code = $t->getCode();
-            $message = $t->getMessage();
-        } else {
-            $code = 500;
-            $message = 'Internal server error';
-        }
-        if ($code == 500) {
-            Logger::instance()->error($t);
-        }
+        [$code, $message] = ErrorHandler::process($t);
         http_response_code($code);
         if ($t instanceof IHeaderContainer) {
             foreach ($t->getHeaders() as $name => $value) {

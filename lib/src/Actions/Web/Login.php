@@ -4,20 +4,27 @@ namespace Lib\Actions\Web;
 
 use Lib\Exception;
 use Lib\Models\User;
+use Lib\Views\User as UserView;
 use Lib\Password;
-use Lib\WebRedirect;
 
 /**
  * POST:
  * @property-read string $username
  * @property-read string $password
- * @property-read string $return_url
  */
 class Login extends AbstractAction
 {
     protected function isAuthRequired(): bool
     {
         return false;
+    }
+
+    protected function handleError(Exception $ex): ?array
+    {
+        return [
+            'success' => false,
+            'error' => $ex->getMessage(),
+        ];
     }
 
     protected function run(): ?array
@@ -42,6 +49,11 @@ class Login extends AbstractAction
 
             $this->session->setUser($user);
         }
-        throw new WebRedirect($this->return_url ?? '/');
+
+        $userView = new UserView($this->session->getUser());
+        return [
+            'success' => true,
+            'user' => $userView->render(),
+        ];
     }
 }

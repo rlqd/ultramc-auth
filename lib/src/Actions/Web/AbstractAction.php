@@ -2,6 +2,7 @@
 
 namespace Lib\Actions\Web;
 
+use Lib\Exception;
 
 abstract class AbstractAction extends \Lib\Actions\AbstractAction
 {
@@ -19,10 +20,22 @@ abstract class AbstractAction extends \Lib\Actions\AbstractAction
         if ($this->isAuthRequired()) {
             $this->authenticate();
         }
-        return parent::call();
+        try {
+            return parent::call();
+        } catch (Exception $ex) {
+            if ($ex->isInternal()) {
+                throw $ex;
+            }
+            return $this->handleError($ex);
+        }
     }
 
-    protected function isAuthRequired() : bool
+    protected function handleError(Exception $ex): ?array
+    {
+        throw $ex;
+    }
+
+    protected function isAuthRequired(): bool
     {
         return true;
     }
@@ -30,7 +43,7 @@ abstract class AbstractAction extends \Lib\Actions\AbstractAction
     /**
      * @throws \Lib\Exception
      */
-    protected function authenticate() : void
+    protected function authenticate(): void
     {
         $this->currentUser = $this->session->getUser();
         if ($this->currentUser === null) {
