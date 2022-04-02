@@ -7,6 +7,7 @@ $app->addCommands([
     new \Lib\Commands\RegisterUserCommand(),
     new \Lib\Commands\GrantPrivilegesCommand(),
     new \Lib\Commands\ResetUserPassword(),
+    new \Lib\Commands\SetupDatabase(),
 ]);
 
 $app->run();

@@ -7,11 +7,6 @@ use Lib\Models\User;
 use Lib\Views\User as UserView;
 use Lib\Password;
 
-/**
- * POST:
- * @property-read string $username
- * @property-read string $password
- */
 class Login extends AbstractAction
 {
     protected function isAuthRequired(): bool
@@ -19,31 +14,24 @@ class Login extends AbstractAction
         return false;
     }
 
-    protected function handleError(Exception $ex): ?array
-    {
-        return [
-            'success' => false,
-            'error' => $ex->getMessage(),
-        ];
-    }
-
     protected function run(): ?array
     {
         if (!$this->session->isAuthenticated()) {
-            if (!isset($this->username, $this->password)) {
-                throw new Exception('Missing required parameters', 400);
+            $input = $this->getInput();
+            if (!isset($input['username'], $input['password'])) {
+                throw new Exception('missingParameters', Exception::INCORRECT_INPUT);
             }
-            $users = User::find(['name' => $this->username]);
+            $users = User::find(['name' => $input['username']]);
             if (empty($users)) {
-                throw new Exception('User not found', 404);
+                throw new Exception('userNotFound', Exception::NOT_FOUND);
             }
             $user = reset($users);
             $password = $user->getPassword();
-            if (!$password->verify($this->password)) {
-                throw new Exception('Passwords do not match', 403);
+            if (!$password->verify($input['password'])) {
+                throw new Exception('incorrectPassword', Exception::UNAUTHORIZED);
             }
             if ($password->isShouldMigrate()) {
-                $user->password_hash = Password::fromPlaintext($this->password)->getHash();
+                $user->password_hash = Password::fromPlaintext($input['password'])->getHash();
                 $user->save();
             }
 

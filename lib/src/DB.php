@@ -12,7 +12,7 @@ class DB
 
     protected function __construct()
     {
-        $this->pdo = new \PDO($_ENV['DB_DSL'], $_ENV['DB_USER'], $_ENV['DB_PASS'], [
+        $this->pdo = new \PDO($_ENV['DB_DSL'], $_ENV['DB_USER'] ?? null, $_ENV['DB_PASS'] ?? null, [
             \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
         ]);
     }

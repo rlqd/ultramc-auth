@@ -32,7 +32,11 @@ abstract class AbstractAction extends \Lib\Actions\AbstractAction
 
     protected function handleError(Exception $ex): ?array
     {
-        throw $ex;
+        return [
+            'success' => false,
+            'error' => $ex->getMessage(),
+            'code' => $ex->getCode(),
+        ];
     }
 
     protected function isAuthRequired(): bool
