@@ -4,9 +4,13 @@ namespace Lib\Actions;
 
 
 use Lib\Exception;
+use Lib\Input;
 
 abstract class AbstractAction implements \Lib\IAction
 {
+    protected const HTTP_GET = Input::HTTP_GET;
+    protected const HTTP_POST = Input::HTTP_POST;
+
     /**
      * @return array|null
      * @throws \Lib\Exception
@@ -15,7 +19,15 @@ abstract class AbstractAction implements \Lib\IAction
 
     public function call(): ?array
     {
+        if (!in_array($this->getHttpMethod(), $this->getAcceptedMethods(), true)) {
+            throw new Exception('Method not allowed', Exception::WRONG_METHOD);
+        }
         return $this->run();
+    }
+
+    protected function getAcceptedMethods(): array
+    {
+        return [self::HTTP_GET, self::HTTP_POST];
     }
 
     protected function loadActiveUser(\Lib\UUID $id) : \Lib\Models\User
@@ -28,10 +40,10 @@ abstract class AbstractAction implements \Lib\IAction
     protected function checkAccess(\Lib\Models\User $user) : void
     {
         if (!$user->isApproved()) {
-            throw new Exception("User is not approved", 403);
+            throw new Exception("User is not approved", Exception::FORBIDDEN);
         }
         if ($user->password_reset) {
-            throw new Exception("User has temporary password, game auth not permitted", 403);
+            throw new Exception("User has temporary password, game auth not permitted", Exception::FORBIDDEN);
         }
     }
 
@@ -62,6 +74,21 @@ abstract class AbstractAction implements \Lib\IAction
     protected function getInput(int $depth = 2) : array
     {
         return \Lib\Input::instance()->getInput($depth);
+    }
+
+    protected function getHttpMethod(): string
+    {
+        return Input::instance()->getHttpMethod();
+    }
+
+    public function isHttpGet(): bool
+    {
+        return Input::instance()->isHttpGet();
+    }
+
+    public function isHttpPost(): bool
+    {
+        return Input::instance()->isHttpPost();
     }
 
     public function __get($name)

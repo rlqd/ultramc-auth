@@ -9,6 +9,7 @@ class Exception extends \Exception
     public const UNAUTHORIZED = 401;
     public const FORBIDDEN = 403;
     public const NOT_FOUND = 404;
+    public const WRONG_METHOD = 405;
     public const INTERNAL = 500;
 
     protected bool $isInternal;

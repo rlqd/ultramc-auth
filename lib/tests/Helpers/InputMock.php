@@ -8,6 +8,7 @@ class InputMock extends \Lib\Input
     private array $params = [];
     private array $post;
     private ?array $input = null;
+    private string $method = self::HTTP_POST;
 
     public function getParam(string $name): ?string
     {
@@ -50,5 +51,15 @@ class InputMock extends \Lib\Input
     public function setInput(array $input) : void
     {
         $this->input = $input;
+    }
+
+    public function getHttpMethod(): string
+    {
+        return $this->method;
+    }
+
+    public function setHttpMethod(string $method): void
+    {
+        $this->method = $method;
     }
 }

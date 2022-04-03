@@ -28,6 +28,7 @@ class User extends AbstractView
             'mojangUUID' => $this->model->mojang_uuid,
             'skinUrl' => $this->getSkinUrl(),
             'privileges' => $this->getPrivileges(),
+            'passwordResetRequired' => (bool) $this->model->password_reset,
         ];
     }
 

@@ -6,6 +6,11 @@ use Lib\Views\User as UserView;
 
 class Status extends AbstractAction
 {
+    protected function getAcceptedMethods(): array
+    {
+        return [self::HTTP_GET];
+    }
+
     protected function isAuthRequired(): bool
     {
         return false;

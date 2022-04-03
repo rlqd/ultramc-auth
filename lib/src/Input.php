@@ -5,6 +5,9 @@ namespace Lib;
 
 class Input
 {
+    public const HTTP_GET = 'GET';
+    public const HTTP_POST = 'POST';
+
     use TSingleton;
 
     public function getParam(string $name) : ?string
@@ -38,5 +41,20 @@ class Input
             throw new Exception('Wrong input', 400);
         }
         return $input;
+    }
+
+    public function getHttpMethod(): string
+    {
+        return $_SERVER['REQUEST_METHOD'] ?? self::HTTP_GET;
+    }
+
+    public function isHttpGet(): bool
+    {
+        return $this->getHttpMethod() === self::HTTP_GET;
+    }
+
+    public function isHttpPost(): bool
+    {
+        return $this->getHttpMethod() === self::HTTP_POST;
     }
 }

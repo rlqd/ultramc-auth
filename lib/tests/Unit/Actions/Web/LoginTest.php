@@ -16,7 +16,7 @@ class LoginTest extends ActionTestCase
         $skinId = new UUID();
         $name = 'rlqd';
         $password = 'hackme';
-        $this->mockInputPost([
+        $this->mockInputData([
             'username' => $name,
             'password' => $password,
         ]);
@@ -53,6 +53,7 @@ class LoginTest extends ActionTestCase
                     'admin' => false,
                     'approved' => true,
                 ],
+                'passwordResetRequired' => false,
             ],
         ]);
         self::assertEquals((string)$userId, $this->getSession()->user_id);
@@ -63,7 +64,7 @@ class LoginTest extends ActionTestCase
         $userId = new UUID();
         $name = 'rlqd';
         $password = 'hackme';
-        $this->mockInputPost([
+        $this->mockInputData([
             'username' => $name,
             'password' => 'wrong',
         ]);
@@ -83,7 +84,8 @@ class LoginTest extends ActionTestCase
         $action = new Login();
         self::assertActionOutput($action, [
             'success' => false,
-            'error' => 'Passwords do not match',
+            'error' => 'incorrectPassword',
+            'code' => \Lib\Exception::UNAUTHORIZED,
         ]);
         self::assertNotEquals((string)$userId, $this->getSession()->user_id);
     }

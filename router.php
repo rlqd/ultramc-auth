@@ -1,6 +1,13 @@
 <?php
 
-//chdir(__DIR__ . DIRECTORY_SEPARATOR . 'www');
+/** 
+ * Router for dev server.
+ * Actions are available at /api/ (eg http://localhost:8000/api/profile.php).
+ *
+ * Usage:
+ * php -S localhost:8000 router.php
+*/
+
 $path = '/'.ltrim(parse_url($_SERVER['REQUEST_URI'])['path'],'/');
 
 if (strpos($path, '/api/') !== 0) {

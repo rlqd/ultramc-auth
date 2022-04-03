@@ -3,6 +3,7 @@
 namespace Lib\Actions\Web;
 
 use Lib\Exception;
+use Lib\Input;
 
 abstract class AbstractAction extends \Lib\Actions\AbstractAction
 {
@@ -28,6 +29,11 @@ abstract class AbstractAction extends \Lib\Actions\AbstractAction
             }
             return $this->handleError($ex);
         }
+    }
+
+    protected function getAcceptedMethods(): array
+    {
+        return [self::HTTP_POST];
     }
 
     protected function handleError(Exception $ex): ?array

@@ -7,6 +7,9 @@ use Lib\WebSession;
 
 class ActionTestCase extends DbTestCase
 {
+    protected const HTTP_GET = \Lib\Input::HTTP_GET;
+    protected const HTTP_POST = \Lib\Input::HTTP_POST;
+
     private InputMock $inputMock;
     private WebSessionMock $sessionMock;
 
@@ -38,6 +41,11 @@ class ActionTestCase extends DbTestCase
     protected function mockInputData(array $data) : void
     {
         $this->inputMock->setInput($data);
+    }
+
+    protected function mockInputMethod(string $method): void
+    {
+        $this->inputMock->setHttpMethod($method);
     }
 
     protected function mockSessionData(array $data) : void

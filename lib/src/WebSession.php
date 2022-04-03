@@ -72,4 +72,10 @@ class WebSession
         $this->user_id = (string) $user->getId();
         $this->user = $user;
     }
+
+    public function resetUser(): void
+    {
+        unset($this->user_id);
+        $this->user = null;
+    }
 }

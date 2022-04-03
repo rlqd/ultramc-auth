@@ -4,7 +4,6 @@ namespace Tests\Unit\Actions\Web;
 
 use Lib\Actions\Web\Status;
 use Lib\Models\User;
-use Lib\Password;
 use Lib\UUID;
 use Tests\Helpers\ActionTestCase;
 
@@ -15,6 +14,7 @@ class StatusTest extends ActionTestCase
         $userId = new UUID();
         $skinId = new UUID();
         $name = 'rlqd';
+        $this->mockInputMethod(self::HTTP_GET);
         $this->mockSessionData(['user_id' => (string) $userId]);
         $this->mockQueries(
             $this->query(self::OP_SELECT, 'users')
@@ -25,6 +25,7 @@ class StatusTest extends ActionTestCase
                         'name' => $name,
                         'skin_id' => (string) $skinId,
                         'privilege_mask' => (string) (User::BIT_APPROVED),
+                        'password_reset' => 0,
                     ]
                 ),
             $this->query(self::OP_SELECT, 'skins')
@@ -46,12 +47,14 @@ class StatusTest extends ActionTestCase
                     'admin' => false,
                     'approved' => true,
                 ],
+                'passwordResetRequired' => false,
             ],
         ]);
     }
 
     public function testLoggedOut(): void
     {
+        $this->mockInputMethod(self::HTTP_GET);
         $action = new Status();
         self::assertActionOutput($action, [
             'loggedIn' => false,
