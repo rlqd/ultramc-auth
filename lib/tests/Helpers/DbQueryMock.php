@@ -12,6 +12,7 @@ class DbQueryMock
     public bool $expected = false;
     public ?string $expectedSql = null;
     public ?array $expectedParams = null;
+    public ?bool $expectedTransaction = null;
     public ?string $assertionFailure = null;
 
     public function __construct(string $statement, string $table)
@@ -20,19 +21,19 @@ class DbQueryMock
         $this->table = $table;
     }
 
-    public function getDefinition() : string
+    public function getDefinition(): string
     {
         return $this->statement . ':' . $this->table;
     }
 
-    public function result($result) : self
+    public function result($result): self
     {
         $this->select = true;
         $this->result = $result;
         return $this;
     }
 
-    public function expect(string $sql = null, array $params = null) : self
+    public function expect(string $sql = null, array $params = null): self
     {
         $this->expected = true;
         $this->expectedSql = $sql;
@@ -40,14 +41,20 @@ class DbQueryMock
         return $this;
     }
 
-    public function setFailure(string $message) : void
+    public function inTransaction(bool $value = true): self
+    {
+        $this->expectedTransaction = $value;
+        return $this;
+    }
+
+    public function setFailure(string $message): void
     {
         if ($this->assertionFailure === null) {
             $this->assertionFailure = $message;
         }
     }
 
-    public function getFailure() : string
+    public function getFailure(): string
     {
         return $this->assertionFailure ?? 'Query was not executed';
     }

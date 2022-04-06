@@ -20,7 +20,7 @@ class Skin extends AbstractModel
         return $readonly;
     }
 
-    public function getUserId() : \Lib\UUID
+    public function getUserId(): \Lib\UUID
     {
         return new \Lib\UUID($this->user_id);
     }
@@ -29,7 +29,7 @@ class Skin extends AbstractModel
      * Refresh skin updated datetime
      * @throws \Lib\Exception
      */
-    public function touch() : void
+    public function touch(): void
     {
         $this->updated = new \Lib\DateTime();
         $this->save();

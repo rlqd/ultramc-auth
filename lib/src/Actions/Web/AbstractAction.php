@@ -3,7 +3,6 @@
 namespace Lib\Actions\Web;
 
 use Lib\Exception;
-use Lib\Input;
 
 abstract class AbstractAction extends \Lib\Actions\AbstractAction
 {
@@ -48,6 +47,18 @@ abstract class AbstractAction extends \Lib\Actions\AbstractAction
     protected function isAuthRequired(): bool
     {
         return true;
+    }
+
+    public function isAdminAction(): bool
+    {
+        return false;
+    }
+
+    protected function checkAccess(\Lib\Models\User $user): void
+    {
+        if ($this->isAdminAction() && !$user->isAdmin()) {
+            throw new Exception("User is not privileged", Exception::FORBIDDEN);
+        }
     }
 
     /**

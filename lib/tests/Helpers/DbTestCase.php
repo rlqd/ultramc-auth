@@ -65,13 +65,17 @@ abstract class DbTestCase extends TestCase
         }
         $expectedQueries = $this->expectedQueries;
         $runQueries = $this->dbMock->getQueries();
-        foreach ($runQueries as [$definition, $sql, $params, $stackTrace]) {
+        foreach ($runQueries as [$definition, $sql, $params, $inTransaction, $stackTrace]) {
             $expected = reset($expectedQueries);
             if ($expected === false) {
                 break;
             }
             $i = array_key_first($expectedQueries);
             if ($expected->getDefinition() !== $definition) {
+                continue;
+            }
+            if ($expected->expectedTransaction !== null && $inTransaction !== $expected->expectedTransaction) {
+                $expected->setFailure("Expected transaction at\n$stackTrace");
                 continue;
             }
             if ($expected->expectedSql !== null && mb_strpos($sql, $expected->expectedSql) === false) {

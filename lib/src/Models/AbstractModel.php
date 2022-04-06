@@ -12,6 +12,13 @@ use Lib\UUID;
  */
 abstract class AbstractModel
 {
+    public const SQL_ASC = 1;
+    public const SQL_DESC = 2;
+    protected const DIRECTION_MAP = [
+        self::SQL_ASC => 'ASC',
+        self::SQL_DESC => 'DESC',
+    ];
+
     use \Lib\TData;
 
     protected DB $db;
@@ -85,12 +92,13 @@ abstract class AbstractModel
     }
 
     /**
-     * @param array $constraints
+     * @param array<string,mixed> $constraints
      * @param int $limit
+     * @param array<string,int> $order
      * @return static[]
      * @throws Exception
      */
-    public static function find(array $constraints, int $limit = 0) : array
+    public static function find(array $constraints, int $limit = 0, array $order = []) : array
     {
         static $ops = ['<', '>', '=', '>=', '<=', '<>'];
         $db = DB::instance();
@@ -124,6 +132,17 @@ abstract class AbstractModel
                     $query .= "`$column` = :$key";
                     $params[$key] = $constraint;
                 }
+            }
+        }
+        if ($order) {
+            $query .= ' ORDER BY ';
+            foreach ($order as $column => $direction) {
+                $column = $db->name($column);
+                if (!isset(self::DIRECTION_MAP[$direction])) {
+                    throw new Exception("Invalid direction for column `$column`: " . var_export($direction, true));
+                }
+                $direction = self::DIRECTION_MAP[$direction];
+                $query .= "`$column` $direction";
             }
         }
         if ($limit > 0) {

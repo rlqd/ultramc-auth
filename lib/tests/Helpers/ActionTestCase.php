@@ -28,17 +28,17 @@ class ActionTestCase extends DbTestCase
         $this->resetMockedSingletons();
     }
 
-    protected function mockInputParams(array $params) : void
+    protected function mockInputParams(array $params): void
     {
         $this->inputMock->setParams($params);
     }
 
-    protected function mockInputPost(array $post) : void
+    protected function mockInputPost(array $post): void
     {
         $this->inputMock->setPost($post);
     }
 
-    protected function mockInputData(array $data) : void
+    protected function mockInputData(array $data): void
     {
         $this->inputMock->setInput($data);
     }
@@ -48,12 +48,17 @@ class ActionTestCase extends DbTestCase
         $this->inputMock->setHttpMethod($method);
     }
 
-    protected function mockSessionData(array $data) : void
+    protected function mockInputFiles(array $files): void
+    {
+        $this->inputMock->setFiles($files);
+    }
+
+    protected function mockSessionData(array $data): void
     {
         $this->sessionMock->setData($data);
     }
 
-    protected function getSession() : WebSessionMock
+    protected function getSession(): WebSessionMock
     {
         return $this->sessionMock;
     }
@@ -61,7 +66,7 @@ class ActionTestCase extends DbTestCase
     /**
      * @throws \Lib\Exception
      */
-    protected static function callAction(\Lib\IAction $action) : ?array
+    protected static function callAction(\Lib\IAction $action): ?array
     {
         return $action->call();
     }
@@ -69,8 +74,17 @@ class ActionTestCase extends DbTestCase
     /**
      * @throws \Lib\Exception
      */
-    protected static function assertActionOutput(\Lib\IAction $action, ?array $expectedOutput) : void
+    protected static function assertActionOutput(\Lib\IAction $action, ?array $expectedOutput): void
     {
         self::assertEquals($expectedOutput, self::callAction($action));
+    }
+
+    protected function assertSavedFiles(array $tmpToDestinationMap): void
+    {
+        $savedFiles = $this->inputMock->getSavedFiles();
+        foreach ($tmpToDestinationMap as $tmpFile => $destination) {
+            self::assertArrayHasKey($tmpFile, $savedFiles, 'File was not saved: ' . $tmpFile);
+            self::assertEquals($destination, $savedFiles[$tmpFile], "File saved to wrong location: '$tmpFile' -> '{$savedFiles[$tmpFile]}'");
+        }
     }
 }

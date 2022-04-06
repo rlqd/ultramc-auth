@@ -35,11 +35,11 @@ class LoginTest extends ActionTestCase
                     ]
                 ),
             $this->query(self::OP_SELECT, 'skins')
-                ->expect(null, [$skinId])
-                ->result([
+                ->expect(null, ['param0' => $userId])
+                ->result([[
                     'id' => (string) $skinId,
                     'user_id' => (string) $userId,
-                ]),
+                ]]),
         );
         $action = new Login();
         self::assertActionOutput($action, [
@@ -48,12 +48,18 @@ class LoginTest extends ActionTestCase
                 'id' => $userId->format(),
                 'name' => $name,
                 'mojangUUID' => null,
-                'skinUrl' => '/assets/skins/' . $skinId->format() . '.png',
                 'privileges' => [
                     'admin' => false,
                     'approved' => true,
                 ],
                 'passwordResetRequired' => false,
+                'skins' => [
+                    [
+                        'id' => $skinId->format(),
+                        'url' => '/assets/skins/' . $skinId->format() . '.png',
+                        'selected' => true,
+                    ],
+                ],
             ],
         ]);
         self::assertEquals((string)$userId, $this->getSession()->user_id);

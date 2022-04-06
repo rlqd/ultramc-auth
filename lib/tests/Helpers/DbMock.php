@@ -15,8 +15,8 @@ class DbMock extends DB
     private const REGEX_SQL_STATEMENT = '/\s*([A-Z]+)\s+/';
     private const REGEX_SQL_TABLE = '/(?:INSERT\s+INTO|INSERT\s+IGNORE\s+INTO|SELECT\s+.+?\s+FROM|UPDATE|DELETE\s+FROM)\s+`?(\w+)`?\s+/';
 
-    protected $queries = [];
-    protected $mocks = [];
+    protected array $queries = [];
+    protected array $mocks = [];
 
     public function __construct() {}
 
@@ -40,7 +40,7 @@ class DbMock extends DB
             }
             $definition = $statement;
         }
-        $this->queries[] = [$definition, $query, $params, (new Exception())->getTraceAsString()];
+        $this->queries[] = [$definition, $query, $params, $this->hasActiveTransaction, (new Exception())->getTraceAsString()];
         if (empty($this->mocks[$definition])) {
             if ($select) {
                 $this->killTest('Query result mock not found for ' . $definition);
@@ -62,8 +62,23 @@ class DbMock extends DB
         $this->mocks[$definition][] = $result;
     }
 
-    public function getQueries() : array
+    public function getQueries(): array
     {
         return $this->queries;
+    }
+
+    public function begin(): void
+    {
+        $this->hasActiveTransaction = true;
+    }
+
+    public function commit(): void
+    {
+        $this->hasActiveTransaction = false;
+    }
+
+    public function rollback(): void
+    {
+        $this->hasActiveTransaction = false;
     }
 }

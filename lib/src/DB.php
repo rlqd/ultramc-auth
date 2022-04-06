@@ -9,6 +9,7 @@ class DB
     use TSingleton;
 
     protected \PDO $pdo;
+    protected bool $hasActiveTransaction = false;
 
     protected function __construct()
     {
@@ -127,5 +128,44 @@ class DB
     public function id()
     {
         return $this->pdo->lastInsertId();
+    }
+
+    public function begin(): void
+    {
+        $this->hasActiveTransaction = true;
+        $this->pdo->beginTransaction();
+    }
+
+    public function commit(): void
+    {
+        $this->hasActiveTransaction = false;
+        $this->pdo->commit();
+    }
+
+    public function rollback(): void
+    {
+        $this->hasActiveTransaction = false;
+        $this->pdo->rollBack();
+    }
+
+    public function inTransaction(callable $action): void
+    {
+        $nested = $this->hasActiveTransaction;
+        if (!$nested) {
+            $this->begin();
+        }
+        try {
+            $action();
+            if (!$nested) {
+                $this->commit();
+            }
+        } catch (\Throwable $e) {
+            try {
+                $this->rollback();
+            } catch (\Throwable $e2) {
+                throw new Exception('Failed to rollback on error: ' . $e2->getMessage(), Exception::INTERNAL, $e);
+            }
+            throw $e;
+        }
     }
 }

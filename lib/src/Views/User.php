@@ -3,6 +3,7 @@
 namespace Lib\Views;
 
 use Lib\Models\User as Model;
+use Lib\Models\Skin;
 
 class User extends AbstractView
 {
@@ -26,20 +27,25 @@ class User extends AbstractView
             'id' => $this->model->getId()->format(),
             'name' => $this->model->name,
             'mojangUUID' => $this->model->mojang_uuid,
-            'skinUrl' => $this->getSkinUrl(),
             'privileges' => $this->getPrivileges(),
             'passwordResetRequired' => (bool) $this->model->password_reset,
+            'skins' => $this->getSkins(),
         ];
     }
 
-    protected function getSkinUrl(): ?string
+    protected function getSkins(): array
     {
-        $skin = $this->model->getSkin();
-        if ($skin) {
-            return static::URL_SKINS_PATH . $skin->getId()->format() . '.png';
-        }
+        $skins = Skin::find(['user_id' => $this->model->id], 0, ['updated' => Skin::SQL_ASC]);
+        return array_map(fn($skin) => [
+            'id' => $skin->getId()->format(),
+            'url' => self::getSkinUrl($skin),
+            'selected' => $skin->id === $this->model->skin_id,
+        ], $skins);
+    }
 
-        return null;
+    public static function getSkinUrl(Skin $skin): string
+    {
+        return static::URL_SKINS_PATH . $skin->getId()->format() . '.png';
     }
 
     protected function getPrivileges(): array

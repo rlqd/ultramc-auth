@@ -13,6 +13,7 @@ class StatusTest extends ActionTestCase
     {
         $userId = new UUID();
         $skinId = new UUID();
+        $skinId2 = new UUID();
         $name = 'rlqd';
         $this->mockInputMethod(self::HTTP_GET);
         $this->mockSessionData(['user_id' => (string) $userId]);
@@ -29,10 +30,16 @@ class StatusTest extends ActionTestCase
                     ]
                 ),
             $this->query(self::OP_SELECT, 'skins')
-                ->expect(null, [$skinId])
+                ->expect(null, ['param0' => $userId])
                 ->result([
-                    'id' => (string) $skinId,
-                    'user_id' => (string) $userId,
+                    [
+                        'id' => (string) $skinId,
+                        'user_id' => (string) $userId,
+                    ],
+                    [
+                        'id' => (string) $skinId2,
+                        'user_id' => (string) $userId,
+                    ],
                 ]),
         );
         $action = new Status();
@@ -42,12 +49,23 @@ class StatusTest extends ActionTestCase
                 'id' => $userId->format(),
                 'name' => $name,
                 'mojangUUID' => null,
-                'skinUrl' => '/assets/skins/' . $skinId->format() . '.png',
                 'privileges' => [
                     'admin' => false,
                     'approved' => true,
                 ],
                 'passwordResetRequired' => false,
+                'skins' => [
+                    [
+                        'id' => $skinId->format(),
+                        'url' => '/assets/skins/' . $skinId->format() . '.png',
+                        'selected' => true,
+                    ],
+                    [
+                        'id' => $skinId2->format(),
+                        'url' => '/assets/skins/' . $skinId2->format() . '.png',
+                        'selected' => false,
+                    ],
+                ],
             ],
         ]);
     }

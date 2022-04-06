@@ -6,7 +6,7 @@ use Lib\Models\User;
 use Lib\UUID;
 use Tests\Helpers\DbTestCase;
 
-class UserTest extends DbTestCase
+class ModelTest extends DbTestCase
 {
     public function testLoad() : void
     {
@@ -96,6 +96,7 @@ class UserTest extends DbTestCase
                     'auth_server_id' => 'qwerty',
                 ],
                 'limit' => 1,
+                'order' => [],
                 'expectedQuery' => 'SELECT * FROM `users` WHERE `auth_server_id` = :param0 LIMIT 1',
                 'expectedParams' => ['param0' => 'qwerty'],
             ],
@@ -107,8 +108,22 @@ class UserTest extends DbTestCase
                     ],
                 ],
                 'limit' => 0,
+                'order' => [],
                 'expectedQuery' => 'SELECT * FROM `users` WHERE `created` <> :param0 AND `created` > :param1',
                 'expectedParams' => ['param0' => '2021-01-01 00:00:00', 'param1' => '2020-01-01 00:00:00'],
+            ],
+            [
+                'constraints' => [
+                    'created' => [
+                        ['>', '2020-01-01 00:00:00'],
+                    ],
+                ],
+                'limit' => 0,
+                'order' => [
+                    'created' => User::SQL_DESC,
+                ],
+                'expectedQuery' => 'SELECT * FROM `users` WHERE `created` > :param0 ORDER BY `created` DESC',
+                'expectedParams' => ['param0' => '2020-01-01 00:00:00'],
             ],
         ];
     }
@@ -117,11 +132,12 @@ class UserTest extends DbTestCase
      * @dataProvider providerFind
      * @param array $constraints
      * @param int $limit
+     * @param array $order
      * @param string $expectedQuery
      * @param array $expectedParams
      * @throws \Lib\Exception
      */
-    public function testFind(array $constraints, int $limit, string $expectedQuery, array $expectedParams) : void
+    public function testFind(array $constraints, int $limit, array $order, string $expectedQuery, array $expectedParams) : void
     {
         $id = new UUID('4e8b178de057410ca5ee9777339508c3');
         $this->mockQueries(
@@ -137,7 +153,7 @@ class UserTest extends DbTestCase
                     ],
                 ]),
         );
-        $users = User::find($constraints, $limit);
+        $users = User::find($constraints, $limit, $order);
         self::assertCount(1, $users);
         self::assertEquals($id, $users[0]->getId());
     }

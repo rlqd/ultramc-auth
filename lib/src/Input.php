@@ -25,9 +25,22 @@ class Input
         return $_POST[$name] ?? null;
     }
 
-    public function hasPost(string $name)
+    public function hasPost(string $name): bool
     {
         return array_key_exists($name, $_POST);
+    }
+
+    public function getFile(string $name): ?InputFile
+    {
+        if ($this->hasFile($name)) {
+            return new InputFile($_FILES[$name]);
+        }
+        return null;
+    }
+
+    public function hasFile(string $name): bool
+    {
+        return array_key_exists($name, $_FILES);
     }
 
     /**

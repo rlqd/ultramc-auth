@@ -47,31 +47,41 @@ abstract class AbstractAction implements \Lib\IAction
         }
     }
 
-    protected function getParam(string $name) : ?string
+    protected function getParam(string $name): ?string
     {
         return \Lib\Input::instance()->getParam($name);
     }
 
-    protected function hasParam(string $name) : bool
+    protected function hasParam(string $name): bool
     {
         return \Lib\Input::instance()->hasParam($name);
     }
 
-    protected function getPost(string $name) : ?string
+    protected function getPost(string $name): ?string
     {
         return \Lib\Input::instance()->getPost($name);
     }
 
-    protected function hasPost(string $name) : bool
+    protected function hasPost(string $name): bool
     {
         return \Lib\Input::instance()->hasPost($name);
+    }
+
+    protected function getFile(string $name): ?\Lib\InputFile
+    {
+        return \Lib\Input::instance()->getFile($name);
+    }
+
+    protected function hasFile(string $name): bool
+    {
+        return \Lib\Input::instance()->hasFile($name);
     }
 
     /**
      * @throws \Lib\Exception
      * @throws \JsonException
      */
-    protected function getInput(int $depth = 2) : array
+    protected function getInput(int $depth = 2): array
     {
         return \Lib\Input::instance()->getInput($depth);
     }
@@ -93,11 +103,11 @@ abstract class AbstractAction implements \Lib\IAction
 
     public function __get($name)
     {
-        return $this->getParam($name) ?? $this->getPost($name);
+        return $this->getParam($name) ?? $this->getPost($name) ?? $this->getFile($name);
     }
 
     public function __isset($name)
     {
-        return $this->hasParam($name) || $this->hasPost($name);
+        return $this->hasParam($name) || $this->hasPost($name) || $this->hasFile($name);
     }
 }
