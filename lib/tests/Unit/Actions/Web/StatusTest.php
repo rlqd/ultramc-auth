@@ -57,12 +57,12 @@ class StatusTest extends ActionTestCase
                 'skins' => [
                     [
                         'id' => $skinId->format(),
-                        'url' => '/assets/skins/' . $skinId->format() . '.png',
+                        'url' => '/api/assets/skins/' . $skinId->format() . '.png',
                         'selected' => true,
                     ],
                     [
                         'id' => $skinId2->format(),
-                        'url' => '/assets/skins/' . $skinId2->format() . '.png',
+                        'url' => '/api/assets/skins/' . $skinId2->format() . '.png',
                         'selected' => false,
                     ],
                 ],

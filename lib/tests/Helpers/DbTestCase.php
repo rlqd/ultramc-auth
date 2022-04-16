@@ -6,6 +6,7 @@ namespace Tests\Helpers;
 
 use Lib\DB;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 abstract class DbTestCase extends TestCase
 {
@@ -40,12 +41,12 @@ abstract class DbTestCase extends TestCase
         return $result;
     }
 
-    protected function query(string $op, string $table) : DbQueryMock
+    protected function query(string $op, string $table): DbQueryMock
     {
         return new DbQueryMock($op, $table);
     }
 
-    protected function mockQueries(DbQueryMock ...$query) : void
+    protected function mockQueries(DbQueryMock ...$query): void
     {
         foreach ($query as $i => $q) {
             if ($q->statement === self::OP_SELECT && !$q->select) {
@@ -58,13 +59,32 @@ abstract class DbTestCase extends TestCase
         }
     }
 
-    protected function assertExpectedQueries() : void
+    protected function assertExpectedQueries(): void
     {
         if (empty($this->expectedQueries)) {
             return;
         }
         $expectedQueries = $this->expectedQueries;
         $runQueries = $this->dbMock->getQueries();
+
+        global $argv;
+        if (!empty($argv) && in_array('--debug', $argv)) {
+            $output = new ConsoleOutput();
+            $output->writeln('');
+            foreach ($runQueries as [$definition, $sql, $params, $inTransaction, $stackTrace]) {
+                foreach ($params as $k => $v) {
+                    if (is_object($v)) {
+                        $params[$k] = (string) $v;
+                    }
+                }
+                $output->write(["<fg=yellow>$definition</>", $inTransaction ? '<fg=red>[tx]</>' : '', " <fg=cyan>$sql</> ", substr(var_export($params, true), 6), PHP_EOL]);
+                if (in_array('--verbose', $argv)) {
+                    $output->writeln($stackTrace);
+                }
+                $output->writeln('');
+            }
+        }
+
         foreach ($runQueries as [$definition, $sql, $params, $inTransaction, $stackTrace]) {
             $expected = reset($expectedQueries);
             if ($expected === false) {
@@ -84,7 +104,7 @@ abstract class DbTestCase extends TestCase
             }
             if ($expected->expectedParams !== null) {
                 foreach ($expected->expectedParams as $key => $value) {
-                    if (!isset($params[$key])) {
+                    if (!array_key_exists($key, $params)) {
                         $expected->setFailure("Missing param '$key' (all params: " . implode(', ', array_keys($params)) . ") at\n$stackTrace");
                         continue 2;
                     }

@@ -35,7 +35,7 @@ class User extends AbstractView
 
     protected function getSkins(): array
     {
-        $skins = Skin::find(['user_id' => $this->model->id], 0, ['updated' => Skin::SQL_ASC]);
+        $skins = Skin::find(['user_id' => $this->model->id], 0, ['updated' => Skin::SQL_DESC]);
         return array_map(fn($skin) => [
             'id' => $skin->getId()->format(),
             'url' => self::getSkinUrl($skin),
@@ -45,7 +45,8 @@ class User extends AbstractView
 
     public static function getSkinUrl(Skin $skin): string
     {
-        return static::URL_SKINS_PATH . $skin->getId()->format() . '.png';
+        $root = empty($_ENV['WEB_ROOT']) ? '' : ('/' . $_ENV['WEB_ROOT']);
+        return $root . static::URL_SKINS_PATH . $skin->getId()->format() . '.png';
     }
 
     protected function getPrivileges(): array

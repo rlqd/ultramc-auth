@@ -47,7 +47,7 @@ trait TData
             throw new Exception('Trying to set readonly property ' . static::class . '::' . $name);
         }
         if ($value === null) {
-            unset($this->_data[$name]);
+            $this->_data[$name] = null;
         } else {
             $this->_data[$name] = (string) $value;
         }
@@ -60,6 +60,6 @@ trait TData
 
     public function __unset($name)
     {
-        unset($this->_data[$name]);
+        $this->_data[$name] = null;
     }
 }

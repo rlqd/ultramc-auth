@@ -49,18 +49,6 @@ abstract class AbstractAction extends \Lib\Actions\AbstractAction
         return true;
     }
 
-    public function isAdminAction(): bool
-    {
-        return false;
-    }
-
-    protected function checkAccess(\Lib\Models\User $user): void
-    {
-        if ($this->isAdminAction() && !$user->isAdmin()) {
-            throw new Exception("User is not privileged", Exception::FORBIDDEN);
-        }
-    }
-
     /**
      * @throws \Lib\Exception
      */

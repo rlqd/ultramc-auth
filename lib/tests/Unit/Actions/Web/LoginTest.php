@@ -56,7 +56,7 @@ class LoginTest extends ActionTestCase
                 'skins' => [
                     [
                         'id' => $skinId->format(),
-                        'url' => '/assets/skins/' . $skinId->format() . '.png',
+                        'url' => '/api/assets/skins/' . $skinId->format() . '.png',
                         'selected' => true,
                     ],
                 ],

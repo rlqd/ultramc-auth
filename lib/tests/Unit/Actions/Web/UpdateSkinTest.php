@@ -28,7 +28,7 @@ class UpdateSkinTest extends ActionTestCase
                         'id' => (string) $userId,
                         'name' => 'rlqd',
                         'skin_id' => (string) $skinId,
-                        'privilege_mask' => 0,
+                        'privilege_mask' => (string) \Lib\Models\User::BIT_APPROVED,
                         'password_reset' => 0,
                     ]
                 ),
@@ -54,9 +54,43 @@ class UpdateSkinTest extends ActionTestCase
             'success' => true,
             'skin' => [
                 'id' => $skinId->format(),
-                'url' => '/assets/skins/' . $skinId->format() . '.png',
+                'url' => '/api/assets/skins/' . $skinId->format() . '.png',
                 'selected' => true,
             ],
+        ]);
+    }
+
+    public function testDeselect(): void
+    {
+        $userId = new UUID();
+        $skinId = new UUID();
+        $this->mockInputPost([
+            'deselect' => 1,
+        ]);
+        $this->mockSessionData([
+            'user_id' => $userId,
+        ]);
+        $this->mockQueries(
+            $this->query(self::OP_SELECT, 'users')
+                ->expect(null, [$userId])
+                ->result(
+                    [
+                        'id' => (string) $userId,
+                        'name' => 'rlqd',
+                        'skin_id' => (string) $skinId,
+                        'privilege_mask' => (string) \Lib\Models\User::BIT_APPROVED,
+                        'password_reset' => 0,
+                    ]
+                ),
+            $this->query(self::OP_UPDATE, 'users')
+                ->expect(null, ['id' => $userId, 'skin_id' => null])
+                ->inTransaction()
+                ->result(1),
+        );
+
+        self::assertActionOutput(new UpdateSkin(), [
+            'success' => true,
+            'skin' => null,
         ]);
     }
 
@@ -84,7 +118,7 @@ class UpdateSkinTest extends ActionTestCase
                         'id' => (string) $userId,
                         'name' => 'rlqd',
                         'skin_id' => (string) $skinId,
-                        'privilege_mask' => 0,
+                        'privilege_mask' => (string) \Lib\Models\User::BIT_APPROVED,
                         'password_reset' => 0,
                     ]
                 ),
@@ -103,7 +137,7 @@ class UpdateSkinTest extends ActionTestCase
             'success' => true,
             'skin' => [
                 'id' => $skinId->format(),
-                'url' => '/assets/skins/' . $skinId->format() . '.png',
+                'url' => '/api/assets/skins/' . $skinId->format() . '.png',
                 'selected' => true,
             ],
         ]);

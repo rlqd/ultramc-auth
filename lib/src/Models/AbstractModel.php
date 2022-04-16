@@ -2,7 +2,6 @@
 
 namespace Lib\Models;
 
-
 use Lib\DB;
 use Lib\Exception;
 use Lib\UUID;
@@ -34,9 +33,9 @@ abstract class AbstractModel
         $this->initProperties($data);
     }
 
-    abstract public static function table() : string;
+    abstract public static function table(): string;
 
-    public function readonly() : array
+    public function readonly(): array
     {
         return ['id'];
     }
@@ -62,7 +61,7 @@ abstract class AbstractModel
      * @return array<static>
      * @throws Exception in case of db error or some of records not found
      */
-    public static function loadAll(array $ids, bool $partial = false) : array
+    public static function loadAll(array $ids, bool $partial = false): array
     {
         if (empty($ids)) {
             return [];
@@ -98,7 +97,7 @@ abstract class AbstractModel
      * @return static[]
      * @throws Exception
      */
-    public static function find(array $constraints, int $limit = 0, array $order = []) : array
+    public static function find(array $constraints, int $limit = 0, array $order = []): array
     {
         static $ops = ['<', '>', '=', '>=', '<=', '<>'];
         $db = DB::instance();
@@ -156,7 +155,8 @@ abstract class AbstractModel
         return $models;
     }
 
-    public static function create(array $data = []) : self
+    /** @return static */
+    public static function create(array $data = []): self
     {
         $db = DB::instance();
         if (empty($data['id'])) {
@@ -165,12 +165,12 @@ abstract class AbstractModel
         return new static($db, $data, true);
     }
 
-    public function getId() : UUID
+    public function getId(): UUID
     {
         return new UUID($this->id);
     }
 
-    public function isNew() : bool
+    public function isNew(): bool
     {
         return $this->_new;
     }
@@ -179,7 +179,7 @@ abstract class AbstractModel
      * INSERTS or UPDATES table row
      * @throws Exception
      */
-    public function save() : void
+    public function save(): void
     {
         if ($this->_new) {
             $data = $this->getAllProperties();
