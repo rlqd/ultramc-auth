@@ -31,7 +31,7 @@ trait TProfileAssert
                         'profileName' => $name,
                         'textures' => $skinId ? [
                             'SKIN' => [
-                                'url' => \Lib\Actions\GetProfile::MOJANG_TEXTURES_URL . $skinId
+                                'url' => \Lib\Actions\GetProfile::MOJANG_TEXTURES_URL . $skinId->format()
                             ],
                         ] : [],
                     ])),

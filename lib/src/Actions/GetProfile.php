@@ -75,7 +75,7 @@ class GetProfile extends AbstractAction
             'profileName' => $this->user->name,
             'textures' => $skin === null ? [] : [
                 'SKIN' => [
-                    'url' => self::MOJANG_TEXTURES_URL . $skin->getId()
+                    'url' => self::MOJANG_TEXTURES_URL . $skin->getId()->format()
                 ],
             ],
         ];

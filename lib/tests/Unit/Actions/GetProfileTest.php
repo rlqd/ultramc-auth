@@ -37,7 +37,7 @@ class GetProfileTest extends \Tests\Helpers\ActionTestCase
             'rlqd',
             $skinId,
             $updated,
-            'vTrAy3dXa7Co0UkAEYW8u5OP9uQ1vSJbEFSLconsCPLhgabmAjvZD07NsiPedoMrgPlFW73EA7gCtgm0GL1U1ZFxxNzrkVRZtkQF0ZcOZ+jX23/Xxgz9lBkuMIpHwBznVfBd1r2wgrI0D065yDDr/hy7KHeXjfZCqVEGqSubkgU='
+            'jLHeCd5Rm1b1GNJPj5TzOrSWAJPBFPPNnQSPVrQSy+oO2G83PfpyOtwSNyyGWIRjRdxPY6WEeKT64czl3TbnsZYTyWg2xipWM+sKlRGoQULEvhwFKnRoKz+XCnimCLoZQDO7s6fchlUAMuvzOwyABli6ejfUijIO3ZnL3QPNIJc='
         );
     }
 
